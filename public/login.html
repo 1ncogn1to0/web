@@ -1,0 +1,32 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Вход</h2>
+        <form id="loginForm">
+            <input type="email" id="loginEmail" placeholder="Имя пользователя" required>
+            <input type="password" id="loginPassword" placeholder="Пароль" required>
+            <button type="submit">Войти</button>
+        </form>
+
+        <!-- Форма для ввода OTP, показывается после логина -->
+        <form id="otpForm">
+            <label for="otp">Введите OTP:</label>
+            <input type="text" id="otp" name="otp" required>
+            <button type="submit">Подтвердить OTP</button>
+        </form>
+        
+
+        <p>Нет аккаунта? <a href="register.html">Зарегистрироваться</a></p>
+    </div>
+
+    <script src="auth.js"></script>
+</body>
+</html>

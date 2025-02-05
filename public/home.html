@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Global Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(180deg, #4a148c, #6a11cb 50%, #2575fc 100%);
+            color: #fff;
+            scroll-behavior: smooth;
+        }
+
+        /* Header Section */
+header {
+    background: rgba(0, 0, 0, 0.8); /* Темный фон с прозрачностью */
+    color: white; /* Белый текст */
+    padding: 1rem 0;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Тень для улучшения визуализации */
+}
+
+/* Контейнер для содержимого шапки */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5%;
+    max-width: 1200px; /* Ограничение ширины для центрирования */
+    margin: 0 auto; /* Центрирование контейнера */
+}
+
+/* Логотип */
+.logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-transform: uppercase; /* Все буквы заглавные для логотипа */
+    letter-spacing: 1px; /* Немного увеличено расстояние между буквами */
+    color: white;
+}
+
+/* Ссылки в навигации */
+.nav-links {
+    list-style: none;
+    display: flex;
+    margin: 0; /* Убираем отступы */
+}
+
+/* Каждый элемент списка в навигации */
+.nav-links li {
+    margin-left: 30px;
+    position: relative; /* Для возможности подчеркивания */
+}
+
+/* Стили для ссылок */
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease, padding 0.3s ease;
+}
+
+/* Эффект при наведении */
+.nav-links a:hover {
+    color: #ffde59; /* Желтый цвет при наведении */
+    padding-bottom: 5px; /* Добавляем подчеркивание через отступ */
+    border-bottom: 2px solid #ffde59; /* Желтая линия при наведении */
+}
+
+/* Мобильный переключатель меню */
+.nav-toggle {
+    display: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: white; /* Белый цвет для иконки */
+}
+
+/* Мобильная версия: скрываем меню на маленьких экранах */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; /* Скрываем меню на мобильных устройствах */
+        flex-direction: column; /* Меню в колонку */
+        background-color: #6a11cb; /* Темно-фиолетовый фон */
+        position: absolute;
+        top: 100%; /* Располагаем меню под шапкой */
+        left: 0;
+        width: 100%;
+        padding: 10px 0; /* Отступы внутри мобильного меню */
+    }
+
+    .nav-links.active {
+        display: flex; /* Показать меню при активном состоянии */
+    }
+
+    /* Увеличиваем размер шрифта логотипа и добавляем отступы */
+    .logo {
+        font-size: 2rem;
+    }
+
+    .nav-toggle {
+        display: block; /* Показываем иконку переключателя */
+    }
+
+    .nav-links li {
+        margin-left: 0; /* Убираем отступы между элементами меню */
+        text-align: center; /* Центрируем ссылки */
+        padding: 10px; /* Добавляем внутренний отступ */
+    }
+
+    .nav-links a {
+        font-size: 1.2rem; /* Увеличиваем размер шрифта на мобильных */
+    }
+}
+
+
+        #hero {
+            background: linear-gradient(135deg, #4a148c, #6a11cb);
+            color: white;
+            text-align: center;
+            padding: 120px 20px;
+        }
+
+        .hero-container h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .primary-btn {
+            background-color: #ff6f61;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background-color: #ff4838;
+        }
+
+        .feature-section {
+    text-align: center;
+    padding: 80px 20px;
+    background-color: white; /* Белый фон для блока Features */
+}
+
+.feature-section h2 {
+    color: #333; /* Темно-фиолетовый цвет для заголовка */
+}
+
+        .feature-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .feature-item {
+            background-color: white;
+            color: #333;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            text-align: center;
+        }
+
+        .feature-item i {
+            font-size: 3rem;
+            color: #6a11cb;
+            margin-bottom: 20px;
+        }
+
+        .feature-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .feature-item p {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        #about {
+    background-color: #f9f9f9; /* светлый фон для About */
+    color: #333;
+    text-align: center;
+    padding: 80px 20px;
+}
+
+        #about h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        #about p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        footer a {
+            color: #ffde59;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                background-color: #6a11cb;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .feature-grid {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .hero-container h1 {
+                font-size: 2.5rem;
+            }
+
+            #hero {
+                padding: 80px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">Attendance</div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="index.html">Records</a></li>
+                    <li><a href="#reports">Reports</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+                <div class="nav-toggle">☰</div>
+            </nav>
+            <div id="userAccount" class="user-account">
+                <!-- Имя пользователя и кнопка выхода -->
+            </div>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="container hero-container">
+            <h1>Track Attendance Seamlessly</h1>
+            <p>Manage your organization’s attendance with ease and efficiency.</p>
+            <a href="#features" class="btn primary-btn">Explore Features</a>
+        </div>
+    </section>
+
+    <section id="features" class="container feature-section">
+        <h2 >Our Features</h2>
+        <div class="feature-grid">
+            <div class="feature-item">
+                <i class="fas fa-user-check"></i>
+                <h3>Mark Attendance</h3>
+                <p>Quickly and efficiently track attendance.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-edit"></i>
+                <h3>Update Records</h3>
+                <p>Edit and update attendance data with ease.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-chart-line"></i>
+                <h3>Generate Reports</h3>
+                <p>Export data in various formats for analysis.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <h2>About Us</h2>
+        <p>We are dedicated to providing a comprehensive solution for attendance management. Our platform is designed to make tracking, managing, and analyzing attendance data seamless and efficient. Whether you are managing a small team or a large organization, our system offers the tools you need to stay organized and informed.</p>
+    </section>
+
+    <footer>
+        <div class="container footer-container">
+            <p>&copy; 2024 Attendance System | <a href="#">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <script>
+        window.onload = function () {
+    const username = localStorage.getItem('username'); // Получаем имя пользователя из localStorage
+    const token = localStorage.getItem('token'); // Получаем токен из localStorage
+    const userAccountDiv = document.getElementById('userAccount');
+
+    if (username && token) {
+        // Если пользователь авторизован, показываем имя и кнопку выхода
+        userAccountDiv.innerHTML = `
+            <span>Привет, ${username}</span>
+            <button id="logoutBtn">Выйти</button>
+        `;
+
+        // Логика выхода
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            window.location.href = 'index.html'; // Перенаправление на страницу входа
+        });
+    } else {
+        // Если нет данных в localStorage (пользователь не авторизован)
+        userAccountDiv.innerHTML = 'Вы не авторизованы';
+    }
+};
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-links a');
+
+            navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (href.startsWith("#")) { // Перехватываем только якорные ссылки
+            e.preventDefault();
+            const targetId = href.substring(1);
+            const targetSection = document.getElementById(targetId);
+
+            if (targetSection) {
+                window.scrollTo({
+                    top: targetSection.offsetTop - 70,
+                    behavior: 'smooth'
+                });
+            }
+        }
+    });
+});
+
+
+            const navToggle = document.querySelector('.nav-toggle');
+            const navMenu = document.querySelector('.nav-links'); 
+
+            navToggle.addEventListener('click', () => {
+         navMenu.classList.toggle('active');
+});
+});
+
+</script>
+</body>
+</html>
+
