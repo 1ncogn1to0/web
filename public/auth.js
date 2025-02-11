@@ -51,7 +51,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Сохраняем email в sessionStorage после успешного логина
                 sessionStorage.setItem('email', data.email);
                 document.getElementById('otpForm').style.display = 'block'; // Показываем форму для OTP
-            } else {
+            } else if (data.token) {
+                // Сохраняем токен в localStorage после успешной верификации OTP
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('username', data.username);  // Сохраняем имя
+
+                window.location.href = '/home.html'; // Перенаправление на домашнюю страницу
+            } 
+            else {
                 alert(data.error);
             }
         } catch (error) {
@@ -80,15 +87,38 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await res.json();
-            if (data.message === 'OTP успешно подтвержден') {
-                alert('Двухфакторная аутентификация прошла успешно!');
-                sessionStorage.removeItem('email'); // Удаляем email после верификации
-                window.location.href = '/home.html'; // Перенаправление
-            } else {
+
+            if (data.token) {
+                localStorage.setItem('token', data.token);  // Сохраняем JWT
+                localStorage.setItem('username', data.username); // Сохраняем имя
+                alert('Авторизация успешна!');
+                window.location.href = '/home.html';
+            }
+
+            else {
                 alert(data.error || 'Ошибка верификации OTP.');
             }
         } catch (error) {
             console.error('Ошибка верификации OTP:', error);
         }
     });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        const sessionToken = localStorage.getItem('sessionToken'); // Получаем сессионный токен из локального хранилища
+        
+        if (sessionToken) {
+            await fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: sessionToken }) // Отправляем токен на сервер
+            });
+
+            // Удаляем токены из локального хранилища
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('sessionToken');
+            window.location.href = 'index.html'; // Перенаправляем на главную страницу
+        }
+    });
+
 });

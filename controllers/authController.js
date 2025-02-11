@@ -5,6 +5,9 @@ const bcrypt = require('bcrypt');
 const generateOTP = require('../utils/generateotp');  // Подключаем функцию генерации OTP
 const sendOTP = require('../utils/sendemail');  // Подключаем функцию отправки OTP на email
 
+require('dotenv').config();
+
+
 exports.register = async (req, res) => {
     try {
         const { username, password, email } = req.body;
@@ -77,22 +80,66 @@ exports.login = async (req, res) => {
 
 
 
+
 exports.verifyOTP = async (req, res) => {
-    const { otp, email } = req.body;
+        const { otp, email } = req.body;
+    
+        try {
+            const user = await User.findOne({ email });
+            if (!user) {
+                return res.status(404).json({ error: 'Пользователь не найден' });
+            }
+    
+            if (!user.otp || user.otp.toString() !== otp.toString()) {
+                return res.status(400).json({ error: 'Неверный OTP код' });
+            }
+    
+            user.otp = null;
+    
+            const JWT_SECRET = process.env.JWT_SECRET;
+            if (!JWT_SECRET) {
+                throw new Error('JWT_SECRET не задан! Добавьте его в .env');
+            }
+    
+            const token = jwt.sign(
+                { userId: user._id, username: user.username }, 
+                JWT_SECRET, 
+                { expiresIn: '2h' }
+            );
+    
+            // Сохраняем токен в базе
+            user.sessionToken = token;
+            await user.save();
+    
+            res.json({
+                message: 'OTP успешно подтвержден',
+                token, // Отправляем токен клиенту
+                username: user.username
+            });
+    
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    };
+    
+// Убедитесь, что есть только одна функция logout
+exports.logout = async (req, res) => {
+    const { token } = req.body;
 
     try {
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(404).json({ error: 'Пользователь не найден' });
+        const user = await User.findOne({ sessionToken: token });
+
+        if (user) {
+            user.sessionToken = null; // Обнуляем сессионный токен
+            await user.save(); // Сохраняем изменения в базе данных
         }
 
-        if (user.otp !== otp) {
-            return res.status(400).json({ error: 'Неверный OTP код' });
-        }
-
-        // Успешная верификация OTP
-        res.json({ message: 'OTP успешно подтвержден' });
+        res.json({ message: 'Вы вышли из системы' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-}; 
+};
+  
+        
+        
+        

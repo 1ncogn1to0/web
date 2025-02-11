@@ -319,60 +319,94 @@ header {
     </footer>
 
     <script>
-        window.onload = function () {
-    const username = localStorage.getItem('username'); // Получаем имя пользователя из localStorage
-    const token = localStorage.getItem('token'); // Получаем токен из localStorage
-    const userAccountDiv = document.getElementById('userAccount');
+    document.addEventListener('DOMContentLoaded', async () => {
+        const username = localStorage.getItem('username');
+        const token = localStorage.getItem('token');
+        const userAccountDiv = document.getElementById('userAccount');
 
-    if (username && token) {
-        // Если пользователь авторизован, показываем имя и кнопку выхода
-        userAccountDiv.innerHTML = `
-            <span>Привет, ${username}</span>
-            <button id="logoutBtn">Выйти</button>
-        `;
-
-        // Логика выхода
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('token');
-            localStorage.removeItem('username');
-            window.location.href = 'index.html'; // Перенаправление на страницу входа
-        });
-    } else {
-        // Если нет данных в localStorage (пользователь не авторизован)
-        userAccountDiv.innerHTML = 'Вы не авторизованы';
-    }
-};
-
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const navLinks = document.querySelectorAll('.nav-links a');
-
-            navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-        const href = link.getAttribute('href');
-        if (href.startsWith("#")) { // Перехватываем только якорные ссылки
-            e.preventDefault();
-            const targetId = href.substring(1);
-            const targetSection = document.getElementById(targetId);
-
-            if (targetSection) {
-                window.scrollTo({
-                    top: targetSection.offsetTop - 70,
-                    behavior: 'smooth'
-                });
+        // Проверка, был ли перезагружен сайт
+        const isPageReloaded = localStorage.getItem('pageReloaded');
+        
+        // Если страница была обновлена, пытаемся выйти из аккаунта
+        if (isPageReloaded) {
+            const sessionToken = localStorage.getItem('sessionToken');
+            if (sessionToken) {
+                // Отправляем запрос на выход из аккаунта
+                await logout(sessionToken);
+                localStorage.removeItem('sessionToken'); // Удаляем сессионный токен
             }
+
+            // Убираем флаг обновления страницы
+            localStorage.removeItem('pageReloaded');
+        }
+
+        if (username && token) {
+            userAccountDiv.innerHTML = `
+                <span>Привет, ${username}</span>
+                <button id="logoutBtn">Выйти</button>
+            `;
+
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('username');
+                localStorage.removeItem('sessionToken'); // Удаляем сессионный токен
+                window.location.href = 'index.html';
+            });
+        } else {
+            userAccountDiv.innerHTML = 'Вы не авторизованы';
         }
     });
-});
+
+    // Функция для выхода
+    async function logout(sessionToken) {
+        try {
+            const response = await fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ token: sessionToken }),
+            });
+
+            const data = await response.json();
+            console.log(data.message); // Выводим сообщение об успешном выходе
+        } catch (error) {
+            console.error('Ошибка при выходе:', error);
+        }
+    }
+
+    // Устанавливаем флаг, что страница была обновлена
+    window.onbeforeunload = () => {
+        localStorage.setItem('pageReloaded', 'true');
+    };
 
 
-            const navToggle = document.querySelector('.nav-toggle');
-            const navMenu = document.querySelector('.nav-links'); 
+    // Логика для плавной прокрутки при нажатии на якорные ссылки
+    const navLinks = document.querySelectorAll('.nav-links a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href');
+            if (href.startsWith("#")) { // Перехватываем только якорные ссылки
+                e.preventDefault();
+                const targetId = href.substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        });
+    });
 
-            navToggle.addEventListener('click', () => {
-         navMenu.classList.toggle('active');
-});
-});
+    // Логика для показа/скрытия меню на мобильных устройствах
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-links'); 
+    navToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+    });
+
 
 </script>
 </body>

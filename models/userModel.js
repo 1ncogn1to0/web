@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     email: { type: String, required: true, unique: true },
     otp: { type: String }, 
+    sessionToken: { type: String, default: null }, // Добавляем поле для хра
 });
 
 // Хэширование пароля перед сохранением

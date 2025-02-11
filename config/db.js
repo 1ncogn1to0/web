@@ -1,13 +1,15 @@
-//db.js
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI); // Без устаревших опций
-        console.log('MongoDB Connected');
+        const mongoURI = process.env.DATABASE_URL; // Используем Atlas, если доступен
+
+        await mongoose.connect(mongoURI);
+
+        console.log(`✅ MongoDB Connected: ${mongoURI.includes('127.0.0.1') ? 'Local DB' : 'Atlas Cloud'}`);
     } catch (err) {
-        console.error('Error connecting to MongoDB:', err.message);
-        process.exit(1); // Завершаем процесс при ошибке подключения
+        console.error('❌ Error connecting to MongoDB:', err.message);
+        process.exit(1);
     }
 };
 
