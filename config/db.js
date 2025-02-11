@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
     try {
-        const mongoURI = process.env.DATABASE_URL; // Используем Atlas, если доступен
+        const mongoURI = process.env.MONGO_URI; // Используем Atlas, если доступен
 
         await mongoose.connect(mongoURI);
 
