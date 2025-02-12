@@ -1,10 +1,17 @@
+// config/db.js
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
     try {
-        const mongoURI = process.env.DATABASE_URL; // Используем Atlas, если доступен
+        const dbOptions = {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useFindAndModify: false,
+            useCreateIndex: true,
+        };
 
-        await mongoose.connect(mongoURI);
+        const mongoURI = process.env.DATABASE_URL;
+        await mongoose.connect(mongoURI, dbOptions);
 
         console.log(`✅ MongoDB Connected: ${mongoURI.includes('127.0.0.1') ? 'Local DB' : 'Atlas Cloud'}`);
     } catch (err) {
