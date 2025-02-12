@@ -10,7 +10,7 @@ const connectDB = async () => {
             useCreateIndex: true,
         };
 
-        await mongoose.connect(process.env.DATABASE_URI, dbOptions);
+        await mongoose.connect(process.env.DATABASE_URL, dbOptions);
         console.log('MongoDB Connected');
     } catch (err) {
         console.error('Error connecting to MongoDB:', err.message);
