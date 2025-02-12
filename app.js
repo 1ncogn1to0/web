@@ -1,18 +1,23 @@
-//app.js
+// app.js
 const express = require('express');
 require('dotenv').config(); // Загрузка переменных из .env
 const connectDB = require('./config/db');
 const attendanceRoutes = require('./routes/attendance');
-const authRoutes = require('./routes/auth'); // Маршруты авторизации
-const otpRoutes = require('./routes/otp');   // Подключаем маршруты OTP
+const authRoutes = require('./routes/auth');
+const otpRoutes = require('./routes/otp');   
 const path = require('path');
-const generateOTP = require('./utils/generateotp');  // Утилита для генерации OTP
-const sendOTP = require('./utils/sendemail');  // Утилита для отправки email
-const OTP = require('./models/otpModel');  // Модель OTP
+const cors = require('cors');  // Импортируем cors
+const generateOTP = require('./utils/generateotp');  
+const sendOTP = require('./utils/sendemail');  
+const OTP = require('./models/otpModel');
 
 connectDB(); // Подключение к базе данных
 const app = express();
 
+// Добавляем middleware для CORS, чтобы разрешить доступ с других доменов
+app.use(cors());
+
+// Оставшиеся middleware и маршруты
 app.use(express.json()); // Middleware для обработки JSON
 app.use('/attendance', attendanceRoutes); // Маршруты посещаемости
 app.use('/api/auth', authRoutes); // Маршруты авторизации
@@ -44,9 +49,5 @@ app.post('/api/otp/send', async (req, res) => {
 // Подключение папки public
 app.use(express.static(path.join(__dirname, '/public')));
 
-console.log('PORT:', process.env.PORT); // Добавьте это для диагностики
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
-
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0', () => console.log(`Server running on http://localhost:${PORT}`));
